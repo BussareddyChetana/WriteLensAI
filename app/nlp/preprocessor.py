@@ -9,7 +9,7 @@ def init_nltk():
     for res in resources:
         try:
             nltk.data.find(f'tokenizers/{res}' if 'punkt' in res else f'corpora/{res}')
-        except LookupError:
+        except (LookupError, OSError):
             try:
                 nltk.download(res, quiet=True)
             except Exception:
