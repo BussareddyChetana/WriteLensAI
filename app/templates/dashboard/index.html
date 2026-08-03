@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — WriteLens AI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold brand-font mb-1">User Dashboard</h2>
+            <p class="text-muted small mb-0">Overview of your AI content detection statistics and recent reports</p>
+        </div>
+        <a href="{{ url_for('analysis.new') }}" class="btn btn-primary-custom">
+            <i class="fa-solid fa-plus me-1"></i> New Analysis
+        </a>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="stat-card glass-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-muted small font-weight-bold">Total Analyses</span>
+                        <h2 class="fw-bold text-dark mb-0 mt-1">{{ total_analyses }}</h2>
+                    </div>
+                    <div class="p-3 bg-indigo-subtle text-primary rounded-circle">
+                        <i class="fa-solid fa-file-lines fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card glass-card ai-border">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-muted small font-weight-bold">AI Detections</span>
+                        <h2 class="fw-bold text-danger mb-0 mt-1">{{ ai_count }}</h2>
+                    </div>
+                    <div class="p-3 bg-rose-subtle text-danger rounded-circle">
+                        <i class="fa-solid fa-robot fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card glass-card human-border">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-muted small font-weight-bold">Human Written Detections</span>
+                        <h2 class="fw-bold text-success mb-0 mt-1">{{ human_count }}</h2>
+                    </div>
+                    <div class="p-3 bg-emerald-subtle text-success rounded-circle">
+                        <i class="fa-solid fa-user-pen fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Analyses Table -->
+    <div class="glass-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Recent Analyses</h5>
+            <a href="{{ url_for('analysis.history') }}" class="small fw-bold text-primary text-decoration-none">View All History &rarr;</a>
+        </div>
+
+        {% if recent_analyses %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Document Title</th>
+                            <th>Prediction</th>
+                            <th>Confidence</th>
+                            <th>AI Prob</th>
+                            <th>Format</th>
+                            <th>Date</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in recent_analyses %}
+                            <tr>
+                                <td class="fw-bold text-dark">{{ record.title }}</td>
+                                <td>
+                                    {% if record.prediction == 'AI Generated' %}
+                                        <span class="badge bg-danger"><i class="fa-solid fa-robot me-1"></i> AI Generated</span>
+                                    {% elif record.prediction == 'Uncertain' %}
+                                        <span class="badge bg-warning text-dark"><i class="fa-solid fa-circle-question me-1"></i> Uncertain</span>
+                                    {% else %}
+                                        <span class="badge bg-success"><i class="fa-solid fa-user-pen me-1"></i> Human Written</span>
+                                    {% endif %}
+                                </td>
+                                <td class="fw-bold">{{ record.confidence_score }}%</td>
+                                <td><span class="text-danger font-weight-bold">{{ record.ai_prob }}%</span></td>
+                                <td><span class="badge bg-secondary">{{ record.file_type }}</span></td>
+                                <td class="small text-muted">{{ record.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('analysis.result', record_id=record.id) }}" class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="fa-solid fa-eye me-1"></i> View
+                                    </a>
+                                    <a href="{{ url_for('api.download_pdf_report', record_id=record.id) }}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fa-solid fa-file-pdf"></i> PDF
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5 text-muted">
+                <i class="fa-solid fa-magnifying-glass display-4 mb-3 text-secondary"></i>
+                <p class="mb-2">No analysis records found yet.</p>
+                <a href="{{ url_for('analysis.new') }}" class="btn btn-primary-custom btn-sm">Analyze Your First Text</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

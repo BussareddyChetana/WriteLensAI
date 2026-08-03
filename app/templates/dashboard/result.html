@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+{% block title %}Analysis Results — WriteLens AI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header Controls -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h2 class="fw-bold brand-font mb-1">{{ record.title }}</h2>
+            <p class="text-muted small mb-0">Analyzed on {{ record.created_at.strftime('%B %d, %Y at %H:%M:%S') }} • Format: {{ record.file_type }}</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('analysis.new') }}" class="btn btn-outline-primary btn-sm">
+                <i class="fa-solid fa-plus me-1"></i> New Analysis
+            </a>
+            <a href="{{ url_for('api.download_pdf_report', record_id=record.id) }}" class="btn btn-primary-custom btn-sm">
+                <i class="fa-solid fa-file-pdf me-1"></i> Download PDF Report
+            </a>
+        </div>
+    </div>
+
+    {% set stats_early = record.get_stats() %}
+    {% if stats_early.get('low_reliability') %}
+        <div class="alert alert-warning d-flex align-items-center mb-4 p-3 rounded-3">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+            <span class="small">{{ stats_early.get('reliability_note') }}</span>
+        </div>
+    {% endif %}
+
+    <!-- Main Overview Row -->
+    <div class="row g-4 mb-4">
+        <!-- Left: Prediction Badge & Confidence -->
+        <div class="col-lg-6">
+            <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <span class="text-uppercase small fw-bold text-muted d-block mb-2">Overall Verdict</span>
+                    {% if record.prediction == 'AI Generated' %}
+                        <div class="alert alert-danger d-flex align-items-center mb-4 p-3 rounded-3 border-danger">
+                            <i class="fa-solid fa-robot display-4 me-3 text-danger"></i>
+                            <div>
+                                <h3 class="fw-bold mb-0 text-danger">Likely AI Generated</h3>
+                                <p class="small mb-0 text-danger-emphasis">The text displays high structural predictability and synthetic writing signatures.</p>
+                            </div>
+                        </div>
+                    {% elif record.prediction == 'Uncertain' %}
+                        <div class="alert alert-warning d-flex align-items-center mb-4 p-3 rounded-3 border-warning">
+                            <i class="fa-solid fa-circle-question display-4 me-3 text-warning"></i>
+                            <div>
+                                <h3 class="fw-bold mb-0 text-warning-emphasis">Uncertain — Too Close to Call</h3>
+                                <p class="small mb-0 text-warning-emphasis">The AI vs. human signal is nearly tied. This result is inconclusive rather than a confident verdict.</p>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success d-flex align-items-center mb-4 p-3 rounded-3 border-success">
+                            <i class="fa-solid fa-user-pen display-4 me-3 text-success"></i>
+                            <div>
+                                <h3 class="fw-bold mb-0 text-success">Likely Human Written</h3>
+                                <p class="small mb-0 text-success-emphasis">The text exhibits natural burstiness, varied sentence lengths, and organic phrasings.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Confidence Meter & Probabilities -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold text-dark">Classification Confidence</span>
+                            <span class="fw-bold fs-5 text-primary">{{ record.confidence_score }}%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: {{ record.confidence_score }}%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="row text-center mt-4">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <span class="small text-muted d-block">AI Probability</span>
+                                <span class="fw-bold fs-4 text-danger">{{ record.ai_prob }}%</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <span class="small text-muted d-block">Human Probability</span>
+                                <span class="fw-bold fs-4 text-success">{{ record.human_prob }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Probability Chart -->
+        <div class="col-lg-6">
+            <div class="glass-card p-4 h-100 text-center">
+                <h5 class="fw-bold mb-3 text-start"><i class="fa-solid fa-chart-pie me-2 text-primary"></i>Probability Breakdown</h5>
+                <div style="position: relative; height: 220px;">
+                    <canvas id="probDoughnutChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Explanations & AI Source Estimation Row -->
+    <div class="row g-4 mb-4">
+        <!-- Why Prediction Was Made -->
+        <div class="col-lg-7">
+            <div class="glass-card p-4 h-100">
+                <h5 class="fw-bold mb-3"><i class="fa-solid fa-magnifying-glass-chart me-2 text-primary"></i>Why Was This Prediction Made?</h5>
+                <div class="list-group list-group-flush">
+                    {% for exp in record.get_explanations() %}
+                        <div class="list-group-item px-0 py-3 border-bottom">
+                            <div class="d-flex align-items-start">
+                                {% if exp.type == 'ai' %}
+                                    <div class="p-2 bg-rose-subtle text-danger rounded-circle me-3 mt-1">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
+                                {% else %}
+                                    <div class="p-2 bg-emerald-subtle text-success rounded-circle me-3 mt-1">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <h6 class="fw-bold mb-1 text-dark">{{ exp.title }}</h6>
+                                    <p class="small text-muted mb-0">{{ exp.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Source Estimation -->
+        <div class="col-lg-5">
+            <div class="glass-card p-4 h-100">
+                <h5 class="fw-bold mb-1"><i class="fa-solid fa-microchip me-2 text-primary"></i>Estimated AI Source</h5>
+                <p class="small text-muted mb-3">Writing pattern match probability across AI models</p>
+
+                <div style="position: relative; height: 180px;" class="mb-3">
+                    <canvas id="aiSourceBarChart"></canvas>
+                </div>
+
+                <div class="alert alert-secondary p-2 small mb-0 d-flex align-items-center">
+                    <i class="fa-solid fa-circle-info text-primary me-2 fs-5"></i>
+                    <span class="small text-muted"><b>Disclaimer:</b> {{ record.get_ai_sources().get('disclaimer', '') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Writing Statistics Grid -->
+    <div class="glass-card p-4 mb-4">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-calculator me-2 text-primary"></i>Writing Style & Statistical Metrics</h5>
+        {% set stats = record.get_stats() %}
+        <div class="row g-3 text-center">
+            <div class="col-6 col-md-2">
+                <div class="p-3 bg-light rounded-3 border">
+                    <span class="small text-muted d-block">Word Count</span>
+                    <span class="fw-bold fs-5 text-dark">{{ stats.get('word_count', 0) }}</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="p-3 bg-light rounded-3 border">
+                    <span class="small text-muted d-block">Sentence Count</span>
+                    <span class="fw-bold fs-5 text-dark">{{ stats.get('sentence_count', 0) }}</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="p-3 bg-light rounded-3 border">
+                    <span class="small text-muted d-block">Paragraphs</span>
+                    <span class="fw-bold fs-5 text-dark">{{ stats.get('paragraph_count', 0) }}</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="p-3 bg-light rounded-3 border">
+                    <span class="small text-muted d-block">Reading Time</span>
+                    <span class="fw-bold fs-5 text-dark">{{ stats.get('reading_time_formatted', '0 sec') }}</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="p-3 bg-light rounded-3 border">
+                    <span class="small text-muted d-block">Avg Sent Length</span>
+                    <span class="fw-bold fs-5 text-dark">{{ stats.get('avg_sentence_length', 0) }} words</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="p-3 bg-light rounded-3 border">
+                    <span class="small text-muted d-block">Type-Token Ratio</span>
+                    <span class="fw-bold fs-5 text-dark">{{ (stats.get('type_token_ratio', 0) * 100)|round(1) }}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sentence-by-Sentence Inspection -->
+    <div class="glass-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0"><i class="fa-solid fa-list-check me-2 text-primary"></i>Sentence-by-Sentence Analysis</h5>
+            <span class="badge bg-light text-dark border">
+                Total Sentences: {{ record.get_sentence_analysis()|length }}
+            </span>
+        </div>
+
+        <div class="sentence-list">
+            {% for item in record.get_sentence_analysis() %}
+                {% set risk_class = 'risk-high' if 'High' in item.risk_level else ('risk-moderate' if 'Moderate' in item.risk_level else 'risk-human') %}
+                <div class="sentence-box {{ risk_class }}">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="badge {{ 'bg-danger' if 'High' in item.risk_level else ('bg-warning text-dark' if 'Moderate' in item.risk_level else 'bg-success') }}">
+                            {{ item.risk_level }} ({{ item.confidence }}%)
+                        </span>
+                        <small class="text-muted"><i class="fa-solid fa-magnifying-glass me-1"></i> {{ item.reason }}</small>
+                    </div>
+                    <p class="mb-0 text-dark font-weight-500">"{{ item.sentence }}"</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const aiProb = {{ record.ai_prob }};
+        const humanProb = {{ record.human_prob }};
+        initProbabilityChart('probDoughnutChart', aiProb, humanProb);
+
+        const sourcesData = {{ record.get_ai_sources().get('sources', []) | tojson }};
+        initAISourceChart('aiSourceBarChart', sourcesData);
+    });
+</script>
+{% endblock %}

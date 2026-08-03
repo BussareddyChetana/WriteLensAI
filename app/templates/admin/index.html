@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Panel — WriteLens AI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold brand-font mb-1"><i class="fa-solid fa-user-shield me-2 text-warning"></i>Administrator Control Panel</h2>
+            <p class="text-muted small mb-0">System-wide monitoring, user management, and machine learning model metrics</p>
+        </div>
+        <span class="badge bg-warning text-dark px-3 py-2 fw-bold"><i class="fa-solid fa-server me-1"></i> Admin Privileges Granted</span>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card glass-card">
+                <span class="text-muted small font-weight-bold">Registered Users</span>
+                <h2 class="fw-bold text-dark mb-0 mt-1">{{ total_users }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card glass-card">
+                <span class="text-muted small font-weight-bold">Total System Analyses</span>
+                <h2 class="fw-bold text-primary mb-0 mt-1">{{ total_analyses }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card glass-card ai-border">
+                <span class="text-muted small font-weight-bold">AI Flagged</span>
+                <h2 class="fw-bold text-danger mb-0 mt-1">{{ ai_count }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card glass-card human-border">
+                <span class="text-muted small font-weight-bold">Human Flagged</span>
+                <h2 class="fw-bold text-success mb-0 mt-1">{{ human_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- ML Model Performance Section -->
+    <div class="glass-card p-4 mb-4">
+        <h4 class="fw-bold brand-font mb-3"><i class="fa-solid fa-microchip me-2 text-primary"></i>Machine Learning Model Evaluation Metrics</h4>
+        
+        {% if model_metrics %}
+            <div class="alert alert-info py-2 px-3 small mb-3">
+                <i class="fa-solid fa-award me-2 fs-5"></i>
+                Currently Selected Best Performing Model: <b class="text-dark">{{ model_metrics.best_model_name }}</b>
+                (Trained on {{ model_metrics.train_samples }} training samples, tested on {{ model_metrics.test_samples }} test samples)
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="text-start">Algorithm</th>
+                            <th>Accuracy</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1 Score</th>
+                            <th>ROC AUC</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for algo_name, metrics in model_metrics.all_models.items() %}
+                            <tr class="{{ 'table-primary font-weight-bold' if algo_name == model_metrics.best_model_name else '' }}">
+                                <td class="text-start fw-bold">{{ algo_name }}</td>
+                                <td>{{ (metrics.accuracy * 100)|round(2) }}%</td>
+                                <td>{{ (metrics.precision * 100)|round(2) }}%</td>
+                                <td>{{ (metrics.recall * 100)|round(2) }}%</td>
+                                <td>{{ (metrics.f1_score * 100)|round(2) }}%</td>
+                                <td>{{ (metrics.roc_auc * 100)|round(2) }}%</td>
+                                <td>
+                                    {% if algo_name == model_metrics.best_model_name %}
+                                        <span class="badge bg-success"><i class="fa-solid fa-check me-1"></i> Active Model</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Evaluated</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-warning py-3">
+                <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                Model training metrics file not found. Run <code>python train.py</code> to train models and generate evaluation metrics.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- User Management Table -->
+    <div class="glass-card p-4">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-users me-2 text-primary"></i>System Registered Users</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Total Analyses</th>
+                        <th>Joined Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                        <tr>
+                            <td>#{{ u.id }}</td>
+                            <td class="fw-bold">{{ u.username }}</td>
+                            <td>{{ u.email }}</td>
+                            <td>
+                                {% if u.is_admin %}
+                                    <span class="badge bg-warning text-dark"><i class="fa-solid fa-shield me-1"></i> Admin</span>
+                                {% else %}
+                                    <span class="badge bg-info text-dark">User</span>
+                                {% endif %}
+                            </td>
+                            <td><span class="badge bg-light text-dark border">{{ u.analyses.count() }}</span></td>
+                            <td class="small text-muted">{{ u.created_at.strftime('%Y-%m-%d') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

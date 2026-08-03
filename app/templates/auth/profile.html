@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}User Profile — WriteLens AI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="glass-card p-4 text-center">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                    {{ current_user.username[0].upper() }}
+                </div>
+                <h4 class="fw-bold mb-1">{{ current_user.username }}</h4>
+                <p class="text-muted small mb-3">{{ current_user.email }}</p>
+                {% if current_user.is_admin %}
+                    <span class="badge bg-warning text-dark"><i class="fa-solid fa-user-shield me-1"></i> Administrator</span>
+                {% else %}
+                    <span class="badge bg-info text-dark"><i class="fa-solid fa-user me-1"></i> Standard User</span>
+                {% endif %}
+                <hr>
+                <div class="text-start">
+                    <p class="small text-muted mb-1">Account Created:</p>
+                    <p class="fw-bold small">{{ current_user.created_at.strftime('%B %d, %Y') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="glass-card p-4 mb-4">
+                <h4 class="fw-bold brand-font mb-3">Account Settings</h4>
+                <form action="{{ url_for('auth.profile') }}" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Username</label>
+                        <input type="text" class="form-control" value="{{ current_user.username }}" disabled>
+                        <small class="text-muted">Usernames cannot be modified.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Email Address</label>
+                        <input type="email" name="email" class="form-control" value="{{ current_user.email }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">New Password (leave blank to keep current)</label>
+                        <input type="password" name="new_password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom">Update Profile</button>
+                </form>
+            </div>
+
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-3">Your Detection Activity Overview</h5>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="p-3 bg-light rounded-3">
+                            <h3 class="fw-bold text-primary mb-0">{{ total_analyses }}</h3>
+                            <small class="text-muted">Total Analyses</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-3 bg-light rounded-3">
+                            <h3 class="fw-bold text-danger mb-0">{{ ai_count }}</h3>
+                            <small class="text-muted">AI Detections</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-3 bg-light rounded-3">
+                            <h3 class="fw-bold text-success mb-0">{{ human_count }}</h3>
+                            <small class="text-muted">Human Detections</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,366 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap');
+
+/*
+  WriteLens AI — visual identity
+  -------------------------------
+  This is an analysis tool, not a marketing product — the design should read
+  like an instrument panel a careful analyst would trust: quiet, precise,
+  legible under scrutiny. Rainbow gradients and glossy "SaaS demo" styling
+  were replaced with a single restrained accent and a serif/sans pairing
+  that signals editorial/analytical rigor rather than a generic dashboard.
+
+  Palette (blue theme):
+    --ink         #0d1b2e   deep navy-black, primary text & dark surfaces
+    --paper       #f4f7fb   cool off-white page background
+    --line        #d7e0ee   hairline borders on paper surfaces
+    --accent      #1e56b0   cobalt blue - the ONE accent color, used sparingly
+    --accent-ink  #143f85   darker cobalt for text/hover states
+    --ai-color    #b3432f   muted brick red for "AI generated" signal
+    --human-color #3a6b4a   muted forest green for "human written" signal
+    --uncertain   #a8791f   muted amber for the "Uncertain" verdict tier
+*/
+
+:root {
+  --ink: #0d1b2e;
+  --ink-soft: #33445c;
+  --paper: #f4f7fb;
+  --paper-dim: #e8eef7;
+  --line: #d7e0ee;
+  --accent: #1e56b0;
+  --accent-ink: #143f85;
+  --ai-color: #b3432f;
+  --ai-bg: #fbeeea;
+  --human-color: #3a6b4a;
+  --human-bg: #eef4ec;
+  --uncertain: #a8791f;
+  --uncertain-bg: #faf1de;
+
+  /* legacy variable names kept for any template still referencing them */
+  --primary-color: var(--accent);
+  --primary-hover: var(--accent-ink);
+  --accent-color: var(--accent);
+  --dark-bg: var(--ink);
+  --card-bg: #14223a;
+  --text-main: #f4f7fb;
+  --text-muted: #8b9db1;
+  --warning-color: var(--uncertain);
+
+  /* Bootstrap 5.3 utility classes (text-primary, bg-primary, btn-primary,
+     border-primary, etc.) all read from these variables, so retargeting
+     them here re-themes every existing template in one place instead of
+     hunting down each class name individually. */
+  --bs-primary: #1e56b0;
+  --bs-primary-rgb: 30, 86, 176;
+  --bs-primary-text-emphasis: #143f85;
+  --bs-primary-bg-subtle: #dce7f8;
+  --bs-primary-border-subtle: #aac3ea;
+  --bs-link-color: #143f85;
+  --bs-link-color-rgb: 20, 63, 133;
+  --bs-link-hover-color: #1e56b0;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent-ink);
+  --bs-btn-hover-bg: var(--accent-ink);
+  --bs-btn-hover-border-color: var(--accent-ink);
+  --bs-btn-active-bg: var(--accent-ink);
+  --bs-btn-active-border-color: var(--accent-ink);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.975rem;
+}
+
+h1, h2, h3, .brand-font {
+  font-family: 'Source Serif 4', Georgia, serif;
+  letter-spacing: -0.01em;
+}
+
+h4, h5, h6 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.mono, code, .badge {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: var(--accent-ink);
+}
+a:hover {
+  color: var(--accent);
+}
+
+/* Navbar */
+.navbar-writelens {
+  background: var(--ink);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.navbar-brand {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+}
+
+.brand-gradient {
+  color: #7ba8e8; /* single light-blue accent instead of a rainbow gradient */
+}
+
+.navbar-nav .nav-link {
+  color: rgba(246, 244, 239, 0.75);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+/* Hero Section */
+.hero-section {
+  background: var(--ink);
+  color: #ffffff;
+  padding: 5rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  pointer-events: none;
+}
+
+.btn-primary-custom {
+  background: var(--accent);
+  color: white;
+  border: 1px solid var(--accent-ink);
+  font-weight: 600;
+  padding: 0.7rem 1.6rem;
+  border-radius: 0.4rem;
+  box-shadow: none;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-primary-custom:hover {
+  background: var(--accent-ink);
+  transform: translateY(-1px);
+  color: white;
+}
+
+.btn-outline-primary {
+  color: var(--accent-ink);
+  border-color: var(--accent-ink);
+}
+.btn-outline-primary:hover {
+  background: var(--accent-ink);
+  border-color: var(--accent-ink);
+}
+
+/* Cards & Panels */
+.glass-card {
+  background: #ffffff;
+  border-radius: 0.6rem;
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(20, 24, 31, 0.04);
+  transition: box-shadow 0.15s ease;
+}
+
+.glass-card:hover {
+  box-shadow: 0 4px 14px rgba(20, 24, 31, 0.06);
+}
+
+.card-dark {
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Metric Stats Cards */
+.stat-card {
+  border-left: 3px solid var(--accent);
+  border-radius: 0.4rem;
+  padding: 1.25rem;
+  background: white;
+  border-top: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.stat-card.ai-border {
+  border-left-color: var(--ai-color);
+}
+
+.stat-card.human-border {
+  border-left-color: var(--human-color);
+}
+
+/* Verdict alert overrides - calmer, flatter than Bootstrap defaults */
+.alert-danger {
+  background: var(--ai-bg);
+  border-color: rgba(179, 67, 47, 0.25) !important;
+}
+.alert-danger .text-danger, .alert-danger.text-danger { color: var(--ai-color) !important; }
+
+.alert-success {
+  background: var(--human-bg);
+  border-color: rgba(58, 107, 74, 0.25) !important;
+}
+.alert-success .text-success, .alert-success.text-success { color: var(--human-color) !important; }
+
+.alert-warning {
+  background: var(--uncertain-bg);
+  border-color: rgba(168, 121, 31, 0.3) !important;
+}
+.alert-warning .text-warning-emphasis { color: var(--uncertain) !important; }
+
+.bg-danger { background-color: var(--ai-color) !important; }
+.text-danger { color: var(--ai-color) !important; }
+.bg-success { background-color: var(--human-color) !important; }
+.text-success { color: var(--human-color) !important; }
+.bg-warning { background-color: var(--uncertain) !important; }
+
+/* Sentence Highlighting */
+.sentence-box {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.35rem;
+  border-left: 3px solid var(--line);
+  background-color: var(--paper);
+  transition: background-color 0.15s ease;
+}
+
+.sentence-box.risk-high {
+  background-color: var(--ai-bg);
+  border-left-color: var(--ai-color);
+}
+
+.sentence-box.risk-moderate {
+  background-color: var(--uncertain-bg);
+  border-left-color: var(--uncertain);
+}
+
+.sentence-box.risk-human {
+  background-color: var(--human-bg);
+  border-left-color: var(--human-color);
+}
+
+/* AI Source Probabilities Progress */
+.source-progress-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+.progress {
+  background-color: var(--paper-dim);
+}
+.progress-bar.bg-primary {
+  background-color: var(--accent) !important;
+}
+
+/* Feature icon boxes on the landing page reference classes like
+   bg-indigo-subtle / bg-purple-subtle / text-purple etc. that Bootstrap
+   does not define, so the icons rendered with no visible background at
+   all. Rather than reintroduce a rainbow of unrelated hues, every variant
+   below resolves to a tonal step of the single accent (plus the signal
+   colors already established for AI / human / uncertain), so the feature
+   grid reads as one coherent family instead of six random colors. */
+.icon-box {
+  line-height: 1;
+}
+.bg-indigo-subtle, .bg-purple-subtle, .bg-info-subtle {
+  background-color: #dce7f8 !important;
+}
+.bg-emerald-subtle {
+  background-color: var(--human-bg) !important;
+}
+.bg-amber-subtle {
+  background-color: var(--uncertain-bg) !important;
+}
+.bg-rose-subtle {
+  background-color: var(--ai-bg) !important;
+}
+.text-purple, .text-info {
+  color: var(--accent-ink) !important;
+}
+footer {
+  margin-top: auto;
+  background: var(--ink);
+  color: var(--text-muted);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Shared inner-page header (About / Features / How It Works / FAQ) - a
+   shorter cousin of .hero-section, so every content page opens with the
+   same quiet, instrument-panel tone instead of diving straight into a
+   white card grid. */
+.page-hero {
+  background: var(--ink);
+  color: #ffffff;
+  padding: 3.25rem 0 2.75rem;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  pointer-events: none;
+}
+.page-hero .eyebrow {
+  color: #7ba8e8;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+}
+.page-hero p.lead {
+  max-width: 620px;
+}
+
+/* Numbered step marker used on the How It Works page */
+.step-marker {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Section divider label used to break up longer inner pages */
+.section-eyebrow {
+  color: var(--accent-ink);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+}

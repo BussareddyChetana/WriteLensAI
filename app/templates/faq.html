@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ — WriteLens AI{% endblock %}
+
+{% block content %}
+<section class="page-hero text-center">
+    <div class="container position-relative">
+        <span class="eyebrow">Questions & Answers</span>
+        <h1 class="display-5 fw-bold mt-2 mb-3">Frequently Asked Questions</h1>
+        <p class="lead text-white-50 mx-auto">
+            The questions we get most, answered plainly — including the ones about our limits.
+        </p>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container" style="max-width: 820px;">
+        <div class="accordion shadow-sm rounded-3" id="faqAccordion">
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        How does WriteLens AI determine if text is AI or human?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-secondary">
+                        It analyzes structural metrics — sentence-length burstiness, vocabulary
+                        richness (type-token ratio), transition-word density, and TF-IDF word/bigram
+                        features — through a trained classifier (Logistic Regression, Linear SVM, or
+                        Random Forest, whichever performs best at training time).
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        Why doesn't confidence ever show 99% or 100%?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-secondary">
+                        We cap it on purpose. A model that reports near-perfect certainty on
+                        open-ended, real-world text is almost always overstating what it actually
+                        knows. Capping the displayed range keeps results decisive without implying
+                        false certainty — if you need a number above roughly 90%, that's a
+                        deliberate ceiling, not a bug.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        Can I use this as proof someone cheated or plagiarized?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-secondary">
+                        No. Treat a WriteLens AI result as one signal to consider alongside other
+                        evidence, not as standalone proof. Heavily edited AI text, or human writing
+                        in an unusual style, can both produce misleading results. Academic or
+                        employment decisions shouldn't rest on this tool alone.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                        What does an "Uncertain" verdict mean?
+                    </button>
+                </h2>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-secondary">
+                        It means the AI-probability and human-probability scores were within 15
+                        points of each other — too close to call confidently in either direction.
+                        Rather than forcing a side, we report the genuine ambiguity.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                        Is the AI Source Estimation guaranteed to be correct?
+                    </button>
+                </h2>
+                <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-secondary">
+                        No. As labeled directly on every report, source estimation is an
+                        experimental feature that estimates probability based on writing-pattern
+                        fingerprints, not a guaranteed identification of ChatGPT, Gemini, Claude,
+                        Llama, or Mistral specifically.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                        What document formats are supported?
+                    </button>
+                </h2>
+                <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-secondary">
+                        Direct text pasting, plus uploads of raw text files (.txt), PDF documents
+                        (.pdf), and Microsoft Word files (.docx).
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                        Is there a minimum text length for a reliable result?
+                    </button>
+                </h2>
+                <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-secondary">
+                        Yes — under roughly 20 words, there isn't enough stylistic signal to say
+                        much of anything, so the result is deliberately pulled toward an
+                        uninformative 50/50 estimate rather than reported with false confidence.
+                        Longer passages (100+ words) give the most reliable signal.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+                        Do you store or share the text I submit?
+                    </button>
+                </h2>
+                <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-secondary">
+                        Submitted text and results are saved to your personal dashboard so you can
+                        revisit them later, and are visible only to your account and platform
+                        admins. We don't sell or share submitted content with third parties.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light text-center">
+    <div class="container">
+        <span class="section-eyebrow">Still have a question?</span>
+        <h2 class="fw-bold mb-3">Get in touch</h2>
+        <a href="{{ url_for('main.index') }}#contact" class="btn btn-primary-custom">
+            Contact the Team <i class="fa-solid fa-arrow-right ms-1"></i>
+        </a>
+    </div>
+</section>
+{% endblock %}

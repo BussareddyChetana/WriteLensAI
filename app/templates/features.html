@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Features — WriteLens AI{% endblock %}
+
+{% block content %}
+<section class="page-hero text-center">
+    <div class="container position-relative">
+        <span class="eyebrow">Features</span>
+        <h1 class="display-5 fw-bold mt-2 mb-3">A complete analysis suite, not just a label.</h1>
+        <p class="lead text-white-50 mx-auto">
+            Everything below runs on every single analysis — no separate paid tier for the parts
+            that actually explain the result.
+        </p>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-eyebrow">Detection engine</span>
+            <h2 class="fw-bold">How the classifier reads your text</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-box bg-indigo-subtle text-primary rounded-3 p-3 d-inline-block mb-3">
+                        <i class="fa-solid fa-layer-group fs-3"></i>
+                    </div>
+                    <h4 class="fw-bold fs-5">Hybrid TF-IDF + Stylometric Model</h4>
+                    <p class="text-muted mb-0">Word and bigram frequency features are combined with sentence-length burstiness, vocabulary richness, punctuation density, and transition-word usage, so the model isn't relying on vocabulary alone.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-box bg-indigo-subtle text-primary rounded-3 p-3 d-inline-block mb-3">
+                        <i class="fa-solid fa-gauge-high fs-3"></i>
+                    </div>
+                    <h4 class="fw-bold fs-5">Calibrated Confidence</h4>
+                    <p class="text-muted mb-0">Displayed confidence is deliberately capped — no analysis claims near-certainty. Predictions under a 15-point margin are reported as "Uncertain" rather than forced to a side.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-box bg-indigo-subtle text-primary rounded-3 p-3 d-inline-block mb-3">
+                        <i class="fa-solid fa-list-check fs-3"></i>
+                    </div>
+                    <h4 class="fw-bold fs-5">Sentence-Level Inspection</h4>
+                    <p class="text-muted mb-0">Every sentence is evaluated individually and color-highlighted by risk level, with a specific, human-readable reason for each flag.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-box bg-indigo-subtle text-primary rounded-3 p-3 d-inline-block mb-3">
+                        <i class="fa-solid fa-microchip fs-3"></i>
+                    </div>
+                    <h4 class="fw-bold fs-5">Estimated AI Source</h4>
+                    <p class="text-muted mb-0">An experimental signature match estimates likelihood across ChatGPT, Gemini, Claude, Llama, and Mistral — always shown with a clear disclaimer that this is a pattern estimate, not identification.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-eyebrow">Insights & reporting</span>
+            <h2 class="fw-bold">Understand the result, keep a record of it</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-box bg-emerald-subtle text-success rounded-3 p-3 d-inline-block mb-3">
+                        <i class="fa-solid fa-chart-radar fs-3"></i>
+                    </div>
+                    <h4 class="fw-bold fs-5">Writing Statistics & Charts</h4>
+                    <p class="text-muted mb-0">Visual charts showing sentence-length burstiness, vocabulary richness, and type-token ratios for the exact text you submitted.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-box bg-rose-subtle text-danger rounded-3 p-3 d-inline-block mb-3">
+                        <i class="fa-solid fa-file-arrow-down fs-3"></i>
+                    </div>
+                    <h4 class="fw-bold fs-5">Downloadable PDF Reports</h4>
+                    <p class="text-muted mb-0">Export a publication-ready PDF audit report, formatted with ReportLab, including executive summary tables and charts.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-box bg-info-subtle text-info rounded-3 p-3 d-inline-block mb-3">
+                        <i class="fa-solid fa-history fs-3"></i>
+                    </div>
+                    <h4 class="fw-bold fs-5">History Management</h4>
+                    <p class="text-muted mb-0">Securely store, search, review, and delete every past analysis from your personal dashboard whenever you need to revisit a result.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-box bg-amber-subtle text-warning rounded-3 p-3 d-inline-block mb-3">
+                        <i class="fa-solid fa-file-pdf fs-3"></i>
+                    </div>
+                    <h4 class="fw-bold fs-5">Multi-Format Document Parsing</h4>
+                    <p class="text-muted mb-0">Upload raw text (.txt), PDF documents (.pdf), or Word files (.docx) with automatic text extraction — no manual copy-pasting required.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-box bg-purple-subtle text-purple rounded-3 p-3 d-inline-block mb-3">
+                        <i class="fa-solid fa-shield-halved fs-3"></i>
+                    </div>
+                    <h4 class="fw-bold fs-5">Private by Default</h4>
+                    <p class="text-muted mb-0">Analyses are tied to your account and visible only to you and admins responsible for platform integrity — never shared or sold.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-box bg-indigo-subtle text-primary rounded-3 p-3 d-inline-block mb-3">
+                        <i class="fa-solid fa-bolt fs-3"></i>
+                    </div>
+                    <h4 class="fw-bold fs-5">Instant Results</h4>
+                    <p class="text-muted mb-0">Feature extraction and inference run in real time — no queueing, no waiting for a batch job to finish.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white text-center">
+    <div class="container">
+        <span class="section-eyebrow">Curious how it works under the hood?</span>
+        <h2 class="fw-bold mb-3">See the full pipeline</h2>
+        <a href="{{ url_for('main.how_it_works') }}" class="btn btn-outline-primary btn-lg">
+            How It Works <i class="fa-solid fa-arrow-right ms-1"></i>
+        </a>
+    </div>
+</section>
+{% endblock %}

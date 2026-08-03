@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}About — WriteLens AI{% endblock %}
+
+{% block content %}
+<section class="page-hero text-center">
+    <div class="container position-relative">
+        <span class="eyebrow">About WriteLens AI</span>
+        <h1 class="display-5 fw-bold mt-2 mb-3">An instrument, not an oracle.</h1>
+        <p class="lead text-white-50 mx-auto">
+            WriteLens AI was built to answer a narrower, more honest question than "is this AI?" —
+            it measures how strongly a piece of writing exhibits statistical patterns associated with
+            language-model output, and shows you exactly why.
+        </p>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="section-eyebrow">Our approach</span>
+                <h2 class="fw-bold mt-2 mb-3">Four questions, not one label</h2>
+                <p class="text-secondary">
+                    Most detectors return a single word: "AI" or "Human." We think that's the least
+                    useful part of the answer. Every analysis on WriteLens AI is built to address four
+                    separate questions, each with its own evidence:
+                </p>
+                <ul class="list-unstyled text-secondary">
+                    <li class="mb-3 d-flex"><i class="fa-solid fa-circle-check text-primary me-2 mt-1"></i> <span><b>Prediction</b> — is this human-written or AI-generated, based on the balance of evidence?</span></li>
+                    <li class="mb-3 d-flex"><i class="fa-solid fa-circle-check text-primary me-2 mt-1"></i> <span><b>Confidence</b> — how far the evidence sits from a coin-flip, capped so we never overstate certainty.</span></li>
+                    <li class="mb-3 d-flex"><i class="fa-solid fa-circle-check text-primary me-2 mt-1"></i> <span><b>Why</b> — which specific sentence structures, burstiness levels, and transition markers drove the result.</span></li>
+                    <li class="mb-3 d-flex"><i class="fa-solid fa-circle-check text-primary me-2 mt-1"></i> <span><b>Estimated source</b> — an experimental, clearly-labeled guess at which model family the writing resembles.</span></li>
+                </ul>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="p-4 bg-light rounded-4 border">
+                    <i class="fa-solid fa-brain text-primary display-1 mb-3"></i>
+                    <h5 class="fw-bold">The machine learning engine</h5>
+                    <p class="text-muted small mb-0">
+                        A hybrid feature set — TF-IDF word/bigram frequencies combined with 10+
+                        stylometric measurements (sentence-length burstiness, vocabulary richness,
+                        transition-word density) — feeds three candidate classifiers (Logistic
+                        Regression, Linear SVM, Random Forest). The strongest performer on held-out
+                        data is selected automatically at training time.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container" style="max-width: 900px;">
+        <div class="text-center mb-5">
+            <span class="section-eyebrow">Being upfront</span>
+            <h2 class="fw-bold">What this tool can and can't tell you</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="glass-card p-4 h-100 human-border stat-card">
+                    <h5 class="fw-bold"><i class="fa-solid fa-check text-success me-2"></i>What it's good for</h5>
+                    <ul class="text-secondary small mb-0 ps-3">
+                        <li class="mb-2">Flagging text with strong, characteristic AI-writing patterns for a closer look</li>
+                        <li class="mb-2">Explaining <em>why</em> a passage reads as synthetic — specific, checkable reasons</li>
+                        <li class="mb-2">Giving a calibrated sense of uncertainty instead of a false binary</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="glass-card p-4 h-100 ai-border stat-card">
+                    <h5 class="fw-bold"><i class="fa-solid fa-triangle-exclamation text-danger me-2"></i>What it isn't</h5>
+                    <ul class="text-secondary small mb-0 ps-3">
+                        <li class="mb-2">Proof of academic dishonesty or authorship fraud on its own</li>
+                        <li class="mb-2">Immune to heavily edited or human-polished AI text, or unusual human styles</li>
+                        <li class="mb-2">A source of guaranteed 99%+ certainty — we intentionally cap displayed confidence to reflect real-world limits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <p class="text-center text-muted small mt-4 mb-0">
+            We'd rather under-claim than over-claim. If you're making a high-stakes decision based on
+            an analysis, treat it as one input among several — not a verdict.
+        </p>
+    </div>
+</section>
+
+<section class="py-5 bg-white text-center">
+    <div class="container">
+        <span class="section-eyebrow">Get started</span>
+        <h2 class="fw-bold mb-3">See it in action</h2>
+        <p class="text-secondary mb-4">Run a piece of text through the analyzer and see the full breakdown for yourself.</p>
+        <a href="{{ url_for('analysis.new') if current_user.is_authenticated else url_for('auth.register') }}" class="btn btn-primary-custom btn-lg">
+            <i class="fa-solid fa-magnifying-glass-chart me-2"></i> Start Free Detection
+        </a>
+    </div>
+</section>
+{% endblock %}

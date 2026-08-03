@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}How It Works — WriteLens AI{% endblock %}
+
+{% block content %}
+<section class="page-hero text-center">
+    <div class="container position-relative">
+        <span class="eyebrow">How It Works</span>
+        <h1 class="display-5 fw-bold mt-2 mb-3">From pasted text to explained verdict.</h1>
+        <p class="lead text-white-50 mx-auto">
+            A walk through exactly what happens between hitting "Analyze" and seeing your result —
+            nothing is hidden behind a black box.
+        </p>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container" style="max-width: 880px;">
+
+        <div class="d-flex gap-3 mb-5">
+            <div class="step-marker">1</div>
+            <div>
+                <h4 class="fw-bold mb-2">Input your content</h4>
+                <p class="text-secondary mb-0">
+                    Paste plain text directly, or upload a .txt, .pdf, or .docx file. Text is
+                    extracted automatically and normalized (Unicode cleanup, whitespace collapsing)
+                    before anything else happens.
+                </p>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3 mb-5">
+            <div class="step-marker">2</div>
+            <div>
+                <h4 class="fw-bold mb-2">Feature extraction</h4>
+                <p class="text-secondary mb-0">
+                    Two families of features are computed in parallel: <b>TF-IDF</b> word and
+                    bigram frequencies (what's being said), and <b>stylometrics</b> — sentence-length
+                    standard deviation, type-token ratio, average word length, punctuation density,
+                    and transition-word density (how it's being said). Combining both is what keeps
+                    the model from just memorizing topic vocabulary instead of writing style.
+                </p>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3 mb-5">
+            <div class="step-marker">3</div>
+            <div>
+                <h4 class="fw-bold mb-2">ML inference</h4>
+                <p class="text-secondary mb-0">
+                    The combined feature vector is scaled and passed to the trained classifier
+                    (selected automatically at training time from Logistic Regression, Linear SVM,
+                    and Random Forest candidates based on held-out F1 score). The model outputs a
+                    raw probability of "AI-generated."
+                </p>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3 mb-5">
+            <div class="step-marker">4</div>
+            <div>
+                <h4 class="fw-bold mb-2">Confidence calibration</h4>
+                <p class="text-secondary mb-0">
+                    Very short inputs get pulled toward the uninformative 50/50 midpoint, since a
+                    few words carry almost no reliable stylistic signal. The final probability is
+                    also capped — WriteLens AI will never report 99%+ certainty in either direction,
+                    because no statistical model deserves that much trust on open-ended, real-world
+                    text. If the result sits within 15 points of a coin-flip, we report
+                    <b>"Uncertain"</b> rather than force a side.
+                </p>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3 mb-5">
+            <div class="step-marker">5</div>
+            <div>
+                <h4 class="fw-bold mb-2">Explanation & source estimate</h4>
+                <p class="text-secondary mb-0">
+                    Alongside the verdict, the same stylometric measurements are used to generate
+                    plain-language reasons ("uniform sentence lengths," "high vocabulary diversity")
+                    and an experimental estimate of which AI model family the writing pattern most
+                    resembles.
+                </p>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3">
+            <div class="step-marker">6</div>
+            <div>
+                <h4 class="fw-bold mb-2">Review & export</h4>
+                <p class="text-secondary mb-0">
+                    Everything — the verdict, per-sentence breakdown, writing statistics, and source
+                    estimate — is saved to your dashboard and available as a downloadable PDF audit
+                    report at any time.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container text-center" style="max-width: 700px;">
+        <span class="section-eyebrow">Why the honesty matters</span>
+        <h2 class="fw-bold mb-3">We'd rather be right than sound certain</h2>
+        <p class="text-secondary mb-4">
+            Text classifiers trained even on large datasets can be overconfident on writing that
+            doesn't closely resemble their training examples. Capping displayed confidence and
+            introducing an explicit "Uncertain" verdict are deliberate design choices — not
+            limitations we're hiding.
+        </p>
+        <a href="{{ url_for('main.faq') }}" class="btn btn-outline-primary">
+            Read the FAQ <i class="fa-solid fa-arrow-right ms-1"></i>
+        </a>
+    </div>
+</section>
+{% endblock %}

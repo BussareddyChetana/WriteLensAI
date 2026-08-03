@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}New Analysis — WriteLens AI{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 900px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold brand-font mb-1">AI Content Analysis</h2>
+            <p class="text-muted small mb-0">Paste text or upload TXT, PDF, or DOCX documents for instant evaluation</p>
+        </div>
+        <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="glass-card p-4 p-md-5">
+        <form id="analyze-form" action="{{ url_for('analysis.new') }}" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="input_type" id="input_type" value="text">
+
+            <!-- Optional Title -->
+            <div class="mb-4">
+                <label class="form-label font-weight-bold">Analysis Title (Optional)</label>
+                <input type="text" name="title" class="form-control" placeholder="e.g., Biology Essay Draft 1 or Research Paper Section 2">
+            </div>
+
+            <!-- Tabs selector -->
+            <ul class="nav nav-pills nav-fill mb-4 p-1 bg-light rounded-3 border">
+                <li class="nav-item">
+                    <button class="nav-link active fw-bold" id="tab-text" type="button">
+                        <i class="fa-solid fa-align-left me-2"></i> Paste Plain Text
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold" id="tab-file" type="button">
+                        <i class="fa-solid fa-file-arrow-up me-2"></i> Upload Document (.TXT, .PDF, .DOCX)
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Text Input Group -->
+            <div id="group-text-input" class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="form-label font-weight-bold mb-0">Content Text</label>
+                    <div class="small">
+                        <span id="live_word_count" class="badge bg-secondary me-1">0 words</span>
+                        <span id="live_char_count" class="badge bg-light text-dark border">0 chars</span>
+                    </div>
+                </div>
+                <textarea name="pasted_text" id="pasted_text" class="form-control" rows="10" placeholder="Paste text here to evaluate whether it was human-written or AI-generated..."></textarea>
+                <small class="text-muted mt-1 d-block"><i class="fa-solid fa-circle-info me-1"></i> For optimal accuracy, provide at least 50–100 words.</small>
+            </div>
+
+            <!-- File Input Group -->
+            <div id="group-file-input" class="mb-4 d-none">
+                <label class="form-label font-weight-bold">Select File to Upload</label>
+                <div class="border border-2 border-dashed rounded-3 p-5 text-center bg-light">
+                    <i class="fa-solid fa-cloud-arrow-up text-primary display-4 mb-3"></i>
+                    <h5 class="fw-bold mb-2">Drag & Drop your document here</h5>
+                    <p class="text-muted small mb-3">Supported formats: Plain Text (.txt), Portable Document (.pdf), Word Document (.docx)</p>
+                    <input type="file" name="file_upload" id="file_upload" class="form-control w-75 mx-auto" accept=".txt,.pdf,.docx">
+                </div>
+            </div>
+
+            <button type="submit" id="btn-submit-analyze" class="btn btn-primary-custom w-100 btn-lg shadow-sm">
+                <span id="submit-spinner" class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Run AI Content Analysis
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

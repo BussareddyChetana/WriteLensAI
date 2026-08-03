@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Analysis History — WriteLens AI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h2 class="fw-bold brand-font mb-1">Analysis History</h2>
+            <p class="text-muted small mb-0">Search, review, and export all your previous AI detection reports</p>
+        </div>
+        <a href="{{ url_for('analysis.new') }}" class="btn btn-primary-custom">
+            <i class="fa-solid fa-plus me-1"></i> New Analysis
+        </a>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="glass-card p-3 mb-4">
+        <form action="{{ url_for('analysis.history') }}" method="GET" class="row g-2 align-items-center">
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" name="q" class="form-control border-start-0" placeholder="Search by title, prediction, or text content..." value="{{ search_query }}">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100 font-weight-bold">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- History Table -->
+    <div class="glass-card p-4">
+        {% if records %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Document Title</th>
+                            <th>Prediction</th>
+                            <th>Confidence</th>
+                            <th>AI Prob</th>
+                            <th>Human Prob</th>
+                            <th>Format</th>
+                            <th>Date</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                            <tr>
+                                <td class="fw-bold text-dark">{{ record.title }}</td>
+                                <td>
+                                    {% if record.prediction == 'AI Generated' %}
+                                        <span class="badge bg-danger"><i class="fa-solid fa-robot me-1"></i> AI Generated</span>
+                                    {% elif record.prediction == 'Uncertain' %}
+                                        <span class="badge bg-warning text-dark"><i class="fa-solid fa-circle-question me-1"></i> Uncertain</span>
+                                    {% else %}
+                                        <span class="badge bg-success"><i class="fa-solid fa-user-pen me-1"></i> Human Written</span>
+                                    {% endif %}
+                                </td>
+                                <td class="fw-bold">{{ record.confidence_score }}%</td>
+                                <td><span class="text-danger font-weight-bold">{{ record.ai_prob }}%</span></td>
+                                <td><span class="text-success font-weight-bold">{{ record.human_prob }}%</span></td>
+                                <td><span class="badge bg-secondary">{{ record.file_type }}</span></td>
+                                <td class="small text-muted">{{ record.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td class="text-end">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ url_for('analysis.result', record_id=record.id) }}" class="btn btn-outline-primary" title="View Full Report">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                        <a href="{{ url_for('api.download_pdf_report', record_id=record.id) }}" class="btn btn-outline-secondary" title="Download PDF Report">
+                                            <i class="fa-solid fa-file-pdf"></i>
+                                        </a>
+                                        <form action="{{ url_for('analysis.delete', record_id=record.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this record?');">
+                                            <button type="submit" class="btn btn-outline-danger" title="Delete Record">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5 text-muted">
+                <i class="fa-solid fa-folder-open display-4 mb-3 text-secondary"></i>
+                <p class="mb-2">No matching history records found.</p>
+                {% if search_query %}
+                    <a href="{{ url_for('analysis.history') }}" class="btn btn-outline-secondary btn-sm">Clear Search Filter</a>
+                {% else %}
+                    <a href="{{ url_for('analysis.new') }}" class="btn btn-primary-custom btn-sm">Create New Analysis</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
