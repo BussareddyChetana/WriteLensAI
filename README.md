@@ -130,7 +130,4 @@ http://127.0.0.1:5000
 - **Kaggle Dataset:** [AI vs Human Text Dataset](https://www.kaggle.com/datasets/shanegerami/ai-vs-human-text)
 - Place `ai_vs_human.csv` into `dataset/ai_vs_human.csv` before running `python train.py` for full Kaggle dataset training.
 
----
 
-## 🛡 Disclaimer
-AI source estimations (ChatGPT, Gemini, Claude, Llama, Mistral) are experimental probability estimates derived from model-specific writing signatures and stylometric fingerprints, not guaranteed identifications.
